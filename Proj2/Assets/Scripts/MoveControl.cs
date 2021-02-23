@@ -16,22 +16,36 @@ public class MoveControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Vector2 moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
-        if (moveInput.x < 0 && _facingRight)Flip();
-        else if (moveInput.x > 0 && !_facingRight) Flip();
-        _moveVelocity = moveInput * speed;
+        Walk();
+        Flip();
     }
 
-    private void FixedUpdate()
-    {
-        _rb.MovePosition(_rb.position + _moveVelocity * Time.fixedDeltaTime);
-    }
 
     private void Flip()
     {
-        _facingRight = !_facingRight;
-        Vector3 theScale = transform.localScale;
-        theScale.x *= -1;
-        transform.localScale = theScale;
+        if (_facingRight && _moveVelocity.x < 0)
+        {
+            transform.localScale *= new Vector2(-1, 1);
+            _facingRight = !_facingRight;
+        }
+        else if (!_facingRight && _moveVelocity.x > 0)
+        {
+            transform.localScale *= new Vector2(-1, 1);
+            _facingRight = !_facingRight;
+        }
+    }
+    private void Walk()
+    {
+        Vector2 moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
+        _moveVelocity = moveInput * speed;
+        _rb.MovePosition(_rb.position + _moveVelocity * Time.fixedDeltaTime);
+    }
+    public bool GetFacingRight()
+    {
+        return _facingRight;
+    }
+    public Vector2 GetMoveVelocity()
+    {
+        return _moveVelocity;
     }
 }
