@@ -8,6 +8,7 @@ public class MoveControl : MonoBehaviour
     private Rigidbody2D _rb;
     private Vector2 _moveVelocity;
     private bool _facingRight = true;
+    private bool _stateUp = true;
     void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
@@ -36,16 +37,19 @@ public class MoveControl : MonoBehaviour
     }
     private void Walk()
     {
+        
         Vector2 moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
         _moveVelocity = moveInput * speed;
         _rb.MovePosition(_rb.position + _moveVelocity * Time.fixedDeltaTime);
+        if (_rb.position.y > 0) _stateUp = true; else _stateUp = false;
+        
     }
     public bool GetFacingRight()
     {
         return _facingRight;
     }
-    public Vector2 GetMoveVelocity()
+    public bool GetStateUp()
     {
-        return _moveVelocity;
+        return _stateUp;
     }
 }
